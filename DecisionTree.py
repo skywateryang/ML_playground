@@ -8,12 +8,12 @@ import numpy as np
 from sklearn.model_selection import ShuffleSplit
 from sklearn.model_selection import learning_curve
 import matplotlib.pyplot as plt
-
+st.set_option('deprecation.showPyplotGlobalUse', False)
 st.header('This is the machine learning playground for decision tree.')
 
 
 # load and cache raw data
-@st.cache
+@st.cache(persist=True)
 def get_data():
     data = load_breast_cancer()
     cancer = pd.DataFrame(data.data, columns=data.feature_names)
@@ -49,6 +49,12 @@ ccp_alpha = st.sidebar.selectbox(
 if st.checkbox('Review dataset'):
     st.dataframe(df)
 
+
+st.markdown('**Classes: 2**')
+st.markdown('**Samples per class: 212(M),357(B)**')
+st.markdown('**Samples total: 569**')
+st.markdown('**Dimensionality: 30**')
+
 # build model
 X_train, X_test, y_train, y_test = train_test_split(df.iloc[:, :-1], df['target'], test_size=0.3, stratify=df['target'],
                                                     random_state=42)
@@ -72,37 +78,31 @@ st.graphviz_chart(dot_data)
 # learning curve
 X = df.iloc[:, :-1]
 y = df.target
-cv = ShuffleSplit(n_splits=100, test_size=0.2, random_state=0)
+cv = ShuffleSplit(n_splits=50, test_size=0.2, random_state=0)
 train_sizes = np.linspace(0.1, 1.0, 5)
 
 st.subheader('Learning curve review')
 
 
-@st.cache
-def plot_leanring_curve(model, X, y, cv, train_sizes):
-    train_sizes, train_scores, test_scores = learning_curve(model, X=X, y=y, cv=cv, train_sizes=train_sizes)
-    train_scores_mean = np.mean(train_scores, axis=1)
-    train_scores_std = np.std(train_scores, axis=1)
-    test_scores_mean = np.mean(test_scores, axis=1)
-    test_scores_std = np.std(test_scores, axis=1)
-    fig, ax = plt.subplots(figsize=(12, 10))
-    ax.set_xlabel("Training examples", fontsize=15)
-    ax.set_ylabel("Accuracy", fontsize=15)
-    ax.set_title("Model learning curve", fontsize=20)
-    ax.grid()
-    ax.fill_between(train_sizes, train_scores_mean - train_scores_std,
-                    train_scores_mean + train_scores_std, alpha=0.1,
-                    color="r")
-    ax.fill_between(train_sizes, test_scores_mean - test_scores_std,
-                    test_scores_mean + test_scores_std, alpha=0.1,
-                    color="g")
-    ax.plot(train_sizes, train_scores_mean, 'o-', color="r",
-            label="Training score")
-    ax.plot(train_sizes, test_scores_mean, 'o-', color="g",
-            label="Test score")
-    ax.legend(loc="best", fontsize=14)
-    return fig
-
-
-fig = plot_leanring_curve(clf, X, y, cv, train_sizes)
+train_sizes, train_scores, test_scores = learning_curve(clf, X=X, y=y, cv=cv, train_sizes=train_sizes)
+train_scores_mean = np.mean(train_scores, axis=1)
+train_scores_std = np.std(train_scores, axis=1)
+test_scores_mean = np.mean(test_scores, axis=1)
+test_scores_std = np.std(test_scores, axis=1)
+fig, ax = plt.subplots(figsize=(12, 10))
+ax.set_xlabel("Training examples", fontsize=15)
+ax.set_ylabel("Accuracy", fontsize=15)
+ax.set_title("Model learning curve", fontsize=20)
+ax.grid()
+ax.fill_between(train_sizes, train_scores_mean - train_scores_std,
+                train_scores_mean + train_scores_std, alpha=0.1,
+                color="r")
+ax.fill_between(train_sizes, test_scores_mean - test_scores_std,
+                test_scores_mean + test_scores_std, alpha=0.1,
+                color="g")
+ax.plot(train_sizes, train_scores_mean, 'o-', color="r",
+        label="Training score")
+ax.plot(train_sizes, test_scores_mean, 'o-', color="g",
+        label="Test score")
+ax.legend(loc="best", fontsize=14)
 st.pyplot(fig)
