@@ -140,7 +140,4 @@ ax.legend(loc="best", fontsize=14)
 st.pyplot(fig)
 
 
-from matplotlib import font_manager
-a = sorted([f.name for f in font_manager.fontManager.ttflist])
-for i in a:
-    st.write(i)
+
