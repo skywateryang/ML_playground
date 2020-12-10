@@ -103,6 +103,7 @@ st.write('测试集准确率: ', round(score_test, 3))
 st.write(confusion_matrix(y_test, test_predict))
 # visualzie tree
 st.subheader("决策树可视化")
+st.write("观察参数变化对于模型树的影响。")
 dot_data = export_graphviz(clf, out_file=None, feature_names=df.columns[:-1], class_names=['malignant', 'benign'],
                            rounded=True, proportion=False,
                            precision=2, filled=True)
@@ -115,7 +116,7 @@ cv = ShuffleSplit(n_splits=50, test_size=0.2, random_state=0)
 train_sizes = np.linspace(0.1, 1.0, 5)
 
 st.subheader('学习率曲线')
-
+st.write("通过观察学习曲线了解是否存在过拟合或欠拟合的情况，从而进一步优化模型参数。")
 train_sizes, train_scores, test_scores = learning_curve(clf, X=X, y=y, cv=cv, train_sizes=train_sizes)
 train_scores_mean = np.mean(train_scores, axis=1)
 train_scores_std = np.std(train_scores, axis=1)
