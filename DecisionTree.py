@@ -122,9 +122,9 @@ train_scores_std = np.std(train_scores, axis=1)
 test_scores_mean = np.mean(test_scores, axis=1)
 test_scores_std = np.std(test_scores, axis=1)
 fig, ax = plt.subplots(figsize=(12, 10))
-ax.set_xlabel("训练样本数", fontsize=15)
-ax.set_ylabel("准确率", fontsize=15)
-ax.set_title("模型学习率曲线", fontsize=20)
+ax.set_xlabel("sample quantity", fontsize=15)
+ax.set_ylabel("accuracy", fontsize=15)
+ax.set_title("model learning curve", fontsize=20)
 ax.grid()
 ax.fill_between(train_sizes, train_scores_mean - train_scores_std,
                 train_scores_mean + train_scores_std, alpha=0.1,
@@ -133,11 +133,8 @@ ax.fill_between(train_sizes, test_scores_mean - test_scores_std,
                 test_scores_mean + test_scores_std, alpha=0.1,
                 color="g")
 ax.plot(train_sizes, train_scores_mean, 'o-', color="r",
-        label="训练集分数")
+        label="training score")
 ax.plot(train_sizes, test_scores_mean, 'o-', color="g",
-        label="测试集分数")
+        label="test score")
 ax.legend(loc="best", fontsize=14)
 st.pyplot(fig)
-
-
-
